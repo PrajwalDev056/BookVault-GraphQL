@@ -8,13 +8,13 @@ export class UsersResolver {
     constructor(private readonly userService: UsersService) {}
 
     @Query(() => [User], { name: 'users' })
-    async getAllUsers(@Args('params') params: FindUserInput): Promise<User[] | void> {
-        return await this.userService.getAllUsers(params);
+    async getAllUsers(@Args('params') params: FindUserInput): Promise<User[]> {
+        return this.userService.getAllUsers(params) ?? [];
     }
 
     @Query(() => User, { name: 'user' })
-    async findUserById(@Args('params') { _id }: FindUserInput): Promise<User | void> {
-        return await this.userService.findUserById(_id);
+    async findUserById(@Args('params') { _id }: FindUserInput): Promise<User | null> {
+        return this.userService.findUserById(_id);
     }
 
     @Mutation(() => User)

@@ -52,8 +52,8 @@ export class UsersService {
     }
 
     async updateUser(id: string, params: UpdateUserInput): Promise<UserDocument> {
-        const rentalIds = params.rentalIds && params.rentalIds.map(id => new Types.ObjectId(id));
-        delete params['rentalIds'];
+        const rentalIds = params.rentalIds?.map(id => new Types.ObjectId(id));
+        params.rentalIds = undefined;
 
         const user = await this.userModel
             .updateOne({ _id: id }, { ...params, $push: { rentalIds: { $each: rentalIds } } })

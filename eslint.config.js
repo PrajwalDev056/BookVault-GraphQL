@@ -9,7 +9,7 @@ const path = require('path');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = [
-    // Apply prettier config - must come first to prevent conflicts
+    // Place prettier config first to be overridden by more specific rules
     prettierConfig,
 
     {
@@ -18,7 +18,6 @@ module.exports = [
         languageOptions: {
             parser: tsParser,
             parserOptions: {
-                // Using createDefaultProgram can improve performance but with reduced type checking
                 createDefaultProgram: true,
                 project: path.resolve(__dirname, './tsconfig.json'),
                 tsconfigRootDir: __dirname,
@@ -41,32 +40,27 @@ module.exports = [
             prettier: prettierPlugin,
         },
         rules: {
-            // TypeScript specific rules - reduced set for better performance
-            '@typescript-eslint/explicit-function-return-type': 'warn', // Downgraded from error
-            '@typescript-eslint/explicit-module-boundary-types': 'warn', // Downgraded from error
+            '@typescript-eslint/explicit-function-return-type': 'warn',
+            '@typescript-eslint/explicit-module-boundary-types': 'warn',
             '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-unused-vars': [
-                'warn', // Downgraded from error
+                'warn',
                 {
                     argsIgnorePattern: '^_',
                     varsIgnorePattern: '^_',
                 },
             ],
-            // Simplified naming convention rules for better performance
             '@typescript-eslint/naming-convention': [
-                'warn', // Downgraded from error
-                // Enforce camelCase for methods/properties
+                'warn',
                 {
                     selector: 'memberLike',
                     format: ['camelCase'],
-                    leadingUnderscore: 'allow', // Allow leading underscore for private members
+                    leadingUnderscore: 'allow',
                 },
-                // Allow PascalCase for classes/interfaces
                 {
                     selector: 'typeLike',
                     format: ['PascalCase'],
                 },
-                // Allow UPPER_CASE for constants and environment variable names
                 {
                     selector: 'property',
                     format: ['camelCase', 'UPPER_CASE'],
@@ -83,10 +77,8 @@ module.exports = [
                     leadingUnderscore: 'allow',
                 },
             ],
-
-            // Import organization
             'import/order': [
-                'warn', // Downgraded from error
+                'warn',
                 {
                     groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
                     'newlines-between': 'always',
@@ -96,8 +88,6 @@ module.exports = [
                     },
                 },
             ],
-
-            // General code quality
             'max-len': [
                 'warn',
                 {
@@ -111,17 +101,11 @@ module.exports = [
             ],
             'no-console': isDevelopment ? 'warn' : 'error',
             'no-debugger': isDevelopment ? 'warn' : 'error',
-
-            // Error handling
-            'no-throw-literal': 'warn', // Downgraded from error
-
-            // Turn off rules that conflict with Prettier
+            'no-throw-literal': 'warn',
             indent: 'off',
             '@typescript-eslint/indent': 'off',
-
-            // Prettier integration - simplified for performance
             'prettier/prettier': [
-                'warn', // Downgraded from error
+                'warn',
                 {
                     tabWidth: 4,
                     singleQuote: true,
@@ -133,6 +117,7 @@ module.exports = [
                 },
             ],
         },
+        // Prettier configuration is now directly included through the prettierPlugin
     },
 
     // Configuration for non-TypeScript files
@@ -160,5 +145,16 @@ module.exports = [
             '.vscode',
             'test/',
         ],
+    },
+
+    // Add prettierPlugin recommended configuration directly
+    {
+        files: ['**/*'],
+        plugins: {
+            prettier: prettierPlugin,
+        },
+        rules: {
+            'prettier/prettier': 'warn',
+        },
     },
 ];
