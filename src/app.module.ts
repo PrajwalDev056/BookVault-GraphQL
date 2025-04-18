@@ -50,7 +50,7 @@ import { HealthModule } from './health/health.module';
         driver: ApolloDriver,
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         introspection: !configService.isProduction,
-        plugins: configService.isDevelopment 
+        plugins: configService.isDevelopment
           ? [ApolloServerPluginLandingPageLocalDefault()]
           : [],
       }),

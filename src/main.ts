@@ -9,21 +9,21 @@ import { Logger } from '@nestjs/common';
 async function bootstrap() {
   // Create environment-aware logger
   const logger = new Logger('Bootstrap');
-  
+
   // Log the current environment to assist with debugging
   logger.log(`Starting application in ${process.env.NODE_ENV || 'development'} mode`);
-  
+
   const app = await NestFactory.create(AppModule, {
     // Only show error logs in production, show all logs in other environments
-    logger: process.env.NODE_ENV === 'production' 
-      ? ['error', 'warn'] 
+    logger: process.env.NODE_ENV === 'production'
+      ? ['error', 'warn']
       : ['error', 'warn', 'log', 'debug', 'verbose'],
   });
-  
+
   const configService = app.get(AppConfigService);
-  
+
   logger.log(`Environment: ${configService.nodeEnv}`);
-  
+
   app.use(json({ limit: configService.security.jsonLimit }));
 
   // Helmet is applied before CORS to ensure security headers are set without conflicts
@@ -58,9 +58,9 @@ async function bootstrap() {
 
   // Start server with configuration from current environment
   await app.listen(configService.port);
-  
+
   logger.log(`Application is running on: http://localhost:${configService.port}`);
-  
+
   if (configService.debug) {
     logger.debug('Debug mode is enabled');
   }

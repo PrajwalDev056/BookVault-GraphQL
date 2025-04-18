@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AppConfigService {
     private readonly logger = new Logger(AppConfigService.name);
-    
+
     constructor(private configService: ConfigService) {
         // Validate database config on service initialization
         this.validateDatabaseConfig();
@@ -13,24 +13,24 @@ export class AppConfigService {
     private validateDatabaseConfig(): void {
         const uri = this.database.uri;
         const dbName = this.database.name;
-        
+
         if (!uri) {
             this.logger.error('MongoDB URI is not defined in environment variables');
             throw new Error('MongoDB URI is required for application startup');
         }
-        
+
         if (!dbName) {
             this.logger.error('MongoDB database name is not defined in environment variables');
             throw new Error('MongoDB database name is required for application startup');
         }
-        
+
         try {
             // Basic validation of MongoDB URI format
             const mongoUrlPattern = /^mongodb(\+srv)?:\/\//;
             if (!mongoUrlPattern.test(uri)) {
                 throw new Error(`Invalid MongoDB connection string: ${uri}. Must start with mongodb:// or mongodb+srv://`);
             }
-            
+
             this.logger.log('Database configuration validated successfully');
         } catch (error) {
             this.logger.error(`Database configuration validation failed: ${error.message}`);
@@ -55,7 +55,7 @@ export class AppConfigService {
     }
 
     get port(): number {
-        return this.configService.get<number>('port');
+        return this.configService.get<number>('port') ?? 3000;
     }
 
     get database() {
