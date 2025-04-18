@@ -1,11 +1,12 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { AuthorsService } from './authors.service';
-import { AuthorsResolver } from './authors.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { AuthorsResolver } from './authors.resolver';
 import { Author, AuthorSchema } from './authors.schema';
+import { AuthorsService } from './authors.service';
 import { BooksModule } from '../books/books.module';
-import { BooksService } from '../books/books.service';
 import { Book, BookSchema } from '../books/books.schema';
+import { BooksService } from '../books/books.service';
 
 @Module({
   /**

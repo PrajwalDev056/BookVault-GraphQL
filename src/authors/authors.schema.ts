@@ -1,6 +1,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+
 import { Book } from '../books/books.schema';
 
 /**
@@ -19,35 +20,35 @@ export class Author {
     In GraphQL, ID is a special scalar type used to represent unique identifiers.
   */
   @Field(() => ID)
-  _id: number;
+    _id: number;
 
   @Prop()
   @Field()
-  name: string;
+    name: string;
 
   @Prop()
   @Field()
-  email: string;
+    email: string;
 
   @Prop()
   @Field()
-  phone: string;
+    phone: string;
 
   @Prop()
   @Field()
-  country: string;
+    country: string;
 
   @Prop()
   @Field(() => [Book])
-  bookIds: Book[];
+    bookIds: Book[];
 
   @Prop()
   @Field()
-  createdAt: Date;
+    createdAt: Date;
 
   @Prop()
   @Field()
-  updatedAt: Date;
+    updatedAt: Date;
 }
 
 /**
@@ -59,50 +60,50 @@ export const AuthorSchema = SchemaFactory.createForClass(Author);
 @InputType()
 export class FindAuthorInput {
   @Field({ nullable: true })
-  _id?: string;
+    _id?: string;
 
   @Field({ nullable: true })
-  name?: string;
+    name?: string;
 
   @Field({ nullable: true })
-  email?: string;
+    email?: string;
 
   @Field({ nullable: true })
-  phone?: string;
+    phone?: string;
 
   @Field({ nullable: true })
-  country?: string;
+    country?: string;
 }
 
 @InputType()
 export class CreateAuthorInput {
   @Field()
-  name: string;
+    name: string;
 
   @Field()
-  email: string;
+    email: string;
 
   @Field()
-  phone: string;
+    phone: string;
 
   @Field()
-  country: string;
+    country: string;
 }
 
 @InputType()
 export class UpdateAuthorInput {
   @Field({ nullable: true })
-  name?: string;
+    name?: string;
 
   @Field({ nullable: true })
-  email?: string;
+    email?: string;
 
   @Field({ nullable: true })
-  phone?: string;
+    phone?: string;
 
   @Field({ nullable: true })
-  country?: string;
+    country?: string;
 
   @Field(() => [ID], { nullable: true })
-  bookIds?: string[];
+    bookIds?: string[];
 }

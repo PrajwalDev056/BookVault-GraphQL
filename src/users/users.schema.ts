@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+
 import { Rental } from '../rentals/rentals.schema';
 
 export type UserDocument = User & mongoose.Document;

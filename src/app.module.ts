@@ -1,21 +1,21 @@
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { join } from 'path';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
 import { AuthorsModule } from './authors/authors.module';
 import { BooksModule } from './books/books.module';
-import { UsersModule } from './users/users.module';
-import { RentalsModule } from './rentals/rentals.module';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { formatError } from './common/errors/graphql-errors';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
 import { HealthModule } from './health/health.module';
-import { formatError } from './common/errors/graphql-errors';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { RentalsModule } from './rentals/rentals.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -28,11 +28,11 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
         uri: configService.database.uri,
         dbName: configService.database.name,
         ...configService.database.options,
-        connectionFactory: (connection) => {
+        connectionFactory: connection => {
           connection.on('connected', () => {
             console.log(`MongoDB connection established to ${configService.database.name}`);
           });
-          connection.on('error', (error) => {
+          connection.on('error', error => {
             console.error('MongoDB connection error:', error);
           });
           connection.on('disconnected', () => {
@@ -64,7 +64,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
         includeStacktraceInErrorResponses: !configService.isProduction,
 
         // Set proper error formatting
-        formatError: (error: import('graphql').GraphQLError) => formatError(error, configService.isDevelopment),
+        formatError: (error: import('graphql').GraphQLError) =>
+          formatError(error, configService.isDevelopment),
 
         // Pass request context
         context: ({ req, res }): { req: any; res: any } => ({ req, res }),
@@ -97,4 +98,4 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
   providers: [AppService, AppConfigService],
   exports: [AppConfigService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+
 import { Author } from '../authors/authors.schema';
 import { Rental } from '../rentals/rentals.schema';
 

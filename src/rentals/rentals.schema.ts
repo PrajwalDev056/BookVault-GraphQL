@@ -1,6 +1,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+
 import { Book } from '../books/books.schema';
 import { User } from '../users/users.schema';
 
@@ -10,27 +11,27 @@ export type RentalDocument = Rental & mongoose.Document;
 @ObjectType()
 export class Rental {
   @Field(() => ID)
-  _id: number;
+    _id: number;
 
   @Prop()
   @Field()
-  dateRented: Date;
+    dateRented: Date;
 
   @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
   @Field(() => User)
-  userId: User;
+    userId: User;
 
   @Prop()
   @Field(() => [Book])
-  bookIds: Book[];
+    bookIds: Book[];
 
   @Prop()
   @Field()
-  createdAt: Date;
+    createdAt: Date;
 
   @Prop()
   @Field()
-  updatedAt: Date;
+    updatedAt: Date;
 }
 
 export const RentalSchema = SchemaFactory.createForClass(Rental);
@@ -38,20 +39,20 @@ export const RentalSchema = SchemaFactory.createForClass(Rental);
 @InputType()
 export class FindRentalInput {
   @Field({ nullable: true })
-  _id: string;
+    _id: string;
 
   @Field({ nullable: true })
-  dateRented: Date;
+    dateRented: Date;
 }
 
 @InputType()
 export class CreateRentalInput {
   @Field({ nullable: true })
-  dateRented?: Date;
+    dateRented?: Date;
 
   @Field(() => ID, { nullable: true })
-  userId?: string;
+    userId?: string;
 
   @Field(() => [ID], { nullable: true })
-  bookIds?: string[];
+    bookIds?: string[];
 }

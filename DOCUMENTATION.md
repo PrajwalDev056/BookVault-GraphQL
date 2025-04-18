@@ -222,6 +222,75 @@ The project includes a testing framework configuration:
 - E2E testing configuration
 - Test environment configuration
 
+## Code Quality & Standards
+
+### ESLint Configuration
+
+The project uses ESLint to enforce code quality and consistent style:
+
+- **TypeScript Conventions**:
+  - Strict typing with explicit return types
+  - Proper casing (camelCase for properties/methods, PascalCase for classes/interfaces)
+  - No unused variables or parameters
+  - Limited use of `any` type
+
+- **Import Organization**:
+  - Imports are organized by groups (external, internal, relative)
+  - Alphabetical sorting within groups
+  - Required spacing between import groups
+
+- **Error Handling**:
+  - No throwing of literal values
+  - Proper error object usage
+  - Custom GraphQL error handling
+
+- **Code Style**:
+  - 100 character line length limit
+  - 2-space indentation
+  - Single quotes for strings
+  - Semicolons required
+
+### Prettier Integration
+
+Prettier works alongside ESLint to enforce consistent formatting:
+
+- Single quotes
+- 100 character print width
+- 2-space indentation
+- Trailing commas
+- Proper bracket spacing
+
+### Markdown Linting
+
+Markdown files follow consistent standards:
+
+- Maximum line length of 100 characters
+- No trailing spaces or multiple blank lines
+- Consistent heading levels
+- Proper list formatting with dashes
+- Blank lines before and after headings/lists
+
+### Git Hooks
+
+Automatic code quality checks are enforced using Git hooks:
+
+- **Pre-commit**: Runs ESLint, Prettier, and markdownlint on staged files
+- **Linting Commands**:
+
+  ```bash
+  # Lint and fix all TypeScript/JavaScript files
+  npm run lint
+  
+  # Check linting without fixing
+  npm run lint:check
+  
+  # Lint and fix markdown files
+  npm run lint:md
+  
+  # Run linting on staged files
+  npm run lint:staged
+  ```
+
 ## Getting Started
 
 ### Prerequisites
@@ -312,4 +381,3 @@ Potential areas for future development include:
 ## Conclusion
 
 The BookVault GraphQL API provides a modern, secure, and well-structured system for book rental management. With its comprehensive domain model, robust configuration system, and security features, it serves as an excellent foundation for building book rental applications and services.
-[EOF]

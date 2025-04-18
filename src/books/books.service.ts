@@ -1,11 +1,7 @@
-import {
-  HttpException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+
 import {
   Book,
   BookDocument,
@@ -22,7 +18,7 @@ export class BooksService {
     private authorService: AuthorsService,
   ) {}
 
-  async getAllBooks(params: FindBookInput) {
+  async getAllBooks(params: FindBookInput): Promise<BookDocument[]> {
     const books = await this.bookModel.find(params || {}).exec();
     if (!books.length) {
       throw new NotFoundException('No books found');
@@ -30,7 +26,7 @@ export class BooksService {
     return books;
   }
 
-  async findBookById(id: string) {
+  async findBookById(id: string): Promise<BookDocument> {
     const book = await this.bookModel.findById(id).exec();
     if (!book._id) {
       throw new NotFoundException('Book details not found');
@@ -38,33 +34,24 @@ export class BooksService {
     return book;
   }
 
-  async findByAuthorId(id: string | number) {
-    const books = await this.bookModel
-      .find()
-      .where('authorIds')
-      .in([id])
-      .exec();
+  async findByAuthorId(id: string | number): Promise<BookDocument[]> {
+    const books = await this.bookModel.find().where('authorIds').in([id]).exec();
     if (!books.length) {
       throw new NotFoundException('Book details not found');
     }
     return books;
   }
 
-  async findByRentalId(id: string | number) {
-    const books = await this.bookModel
-      .find()
-      .where('rentalIds')
-      .in([id])
-      .exec();
+  async findByRentalId(id: string | number): Promise<BookDocument[]> {
+    const books = await this.bookModel.find().where('rentalIds').in([id]).exec();
     if (!books.length) {
       throw new NotFoundException('Book details not found');
     }
     return books;
   }
 
-  async createBook(params: CreateBookInput) {
-    const authorIds =
-      params.authorIds?.map((id) => new Types.ObjectId(id)) || [];
+  async createBook(params: CreateBookInput): Promise<BookDocument> {
+    const authorIds = params.authorIds?.map(id => new Types.ObjectId(id)) || [];
 
     const book = await this.bookModel.create({
       ...params,
@@ -88,11 +75,9 @@ export class BooksService {
     return book;
   }
 
-  async updateBook(id: string, params: UpdateBookInput) {
-    const authorIds =
-      params.authorIds && params.authorIds.map((id) => new Types.ObjectId(id));
-    const rentalIds =
-      params.rentalIds && params.rentalIds.map((id) => new Types.ObjectId(id));
+  async updateBook(id: string, params: UpdateBookInput): Promise<BookDocument> {
+    const authorIds = params.authorIds && params.authorIds.map(id => new Types.ObjectId(id));
+    const rentalIds = params.rentalIds && params.rentalIds.map(id => new Types.ObjectId(id));
     delete params['authorIds'];
     delete params['rentalIds'];
 
@@ -104,16 +89,14 @@ export class BooksService {
       toUpdate['rentalIds'] = { $each: rentalIds };
     }
 
-    const book = await this.bookModel
-      .updateOne({ _id: id }, { ...params, $push: toUpdate })
-      .exec();
+    const book = await this.bookModel.updateOne({ _id: id }, { ...params, $push: toUpdate }).exec();
     if (book.modifiedCount == 0) {
       throw new HttpException('Failed to update book', 417);
     }
     return await this.findBookById(id);
   }
 
-  async deleteBook(id: string) {
+  async deleteBook(id: string): Promise<BookDocument | null> {
     const book = await this.bookModel.findByIdAndDelete(id).exec();
     return book;
   }

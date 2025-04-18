@@ -1,5 +1,7 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+
 import {
   Author,
   AuthorDocument,
@@ -7,16 +9,13 @@ import {
   FindAuthorInput,
   UpdateAuthorInput,
 } from './authors.schema';
-import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class AuthorsService {
   /** Inject the Mongoose model for the Author schema */
-  constructor(
-    @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
-  ) {}
+  constructor(@InjectModel(Author.name) private authorModel: Model<AuthorDocument>) {}
 
-  async getAllAuthors(params: FindAuthorInput) {
+  async getAllAuthors(params: FindAuthorInput): Promise<AuthorDocument[]> {
     const authors = await this.authorModel.find(params || {}).exec();
     if (!authors.length) {
       throw new NotFoundException('No authors found');
@@ -24,7 +23,7 @@ export class AuthorsService {
     return authors;
   }
 
-  async findAuthorsById(id: string) {
+  async findAuthorsById(id: string): Promise<AuthorDocument> {
     const author = await this.authorModel.findById(id).exec();
     if (!author._id) {
       throw new NotFoundException('Author details not found');
@@ -32,19 +31,15 @@ export class AuthorsService {
     return author;
   }
 
-  async findByBookId(id: string | number) {
-    const author = await this.authorModel
-      .find()
-      .where('bookIds')
-      .in([id])
-      .exec();
+  async findByBookId(id: string | number): Promise<AuthorDocument[]> {
+    const author = await this.authorModel.find().where('bookIds').in([id]).exec();
     if (!author.length) {
       throw new NotFoundException('Author details not found');
     }
     return author;
   }
 
-  async createAuthor(params: CreateAuthorInput) {
+  async createAuthor(params: CreateAuthorInput): Promise<AuthorDocument> {
     const author = await this.authorModel.create({
       ...params,
       createdAt: Date.now(),
@@ -56,9 +51,8 @@ export class AuthorsService {
     return author;
   }
 
-  async updateAuthor(id: string, params: UpdateAuthorInput) {
-    const bookIds =
-      params.bookIds && params.bookIds.map((id) => new Types.ObjectId(id));
+  async updateAuthor(id: string, params: UpdateAuthorInput): Promise<AuthorDocument> {
+    const bookIds = params.bookIds && params.bookIds.map(id => new Types.ObjectId(id));
     delete params['bookIds'];
 
     const author = await this.authorModel
@@ -73,7 +67,7 @@ export class AuthorsService {
     return await this.findAuthorsById(id);
   }
 
-  async deleteAuthor(id: string) {
+  async deleteAuthor(id: string): Promise<AuthorDocument | null> {
     const author = await this.authorModel.findByIdAndDelete(id).exec();
     return author;
   }
