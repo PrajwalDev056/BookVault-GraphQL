@@ -70,6 +70,19 @@ npm run env:test
 
 Update the generated `.env.*` file with your specific configuration values.
 
+### Generating CSRF_SECRET
+
+For CSRF protection, you need to generate a strong, random secret.
+
+#### Using Node.js
+
+```bash
+# Run this command in your terminal
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Add the generated secret to your environment file as `CSRF_SECRET=your_generated_secret`.
+
 ## Running the Application
 
 ```bash
@@ -151,4 +164,3 @@ The application provides health check endpoints:
 ## License
 
 This project is licensed under the [UNLICENSED](LICENSE) license.
-[EOF]
