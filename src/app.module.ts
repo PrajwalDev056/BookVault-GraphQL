@@ -31,16 +31,16 @@ import { UsersModule } from './users/users.module';
                     connection: import('mongoose').Connection,
                 ): import('mongoose').Connection => {
                     connection.on('connected', () => {
-                        import('@nestjs/common').then(({ Logger }) => {
-                            Logger.log(
+                        import('@nestjs/common').then(({ Logger: logger }) => {
+                            logger.log(
                                 `MongoDB connection established to ${configService.database.name}`,
                                 'MongooseModule',
                             );
                         });
                     });
                     connection.on('error', error => {
-                        import('@nestjs/common').then(({ Logger }) => {
-                            Logger.error(
+                        import('@nestjs/common').then(({ Logger: logger }) => {
+                            logger.error(
                                 `MongoDB connection error: ${error}`,
                                 '',
                                 'MongooseModule',
@@ -48,8 +48,8 @@ import { UsersModule } from './users/users.module';
                         });
                     });
                     connection.on('disconnected', () => {
-                        import('@nestjs/common').then(({ Logger }) => {
-                            Logger.warn('MongoDB connection disconnected', 'MongooseModule');
+                        import('@nestjs/common').then(({ Logger: logger }) => {
+                            logger.warn('MongoDB connection disconnected', 'MongooseModule');
                         });
                     });
                     return connection;
