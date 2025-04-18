@@ -66,6 +66,10 @@ module.exports = [
                     selector: 'typeLike',
                     format: ['PascalCase'],
                 },
+                {
+                    selector: 'typeLike',
+                    format: ['UPPER_CASE'],
+                },
             ],
 
             // Import organization

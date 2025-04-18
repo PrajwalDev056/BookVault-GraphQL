@@ -5,23 +5,23 @@ import { GraphQLError } from 'graphql';
  */
 export enum ErrorCode {
     // Authentication / Authorization Errors
-    UNAUTHENTICATED = 'UNAUTHENTICATED',
-    UNAUTHORIZED = 'UNAUTHORIZED',
+    unauthenticated = 'UNAUTHENTICATED',
+    unauthorizedAccess = 'UNAUTHORIZED',
 
     // Resource Errors
-    NOT_FOUND = 'NOT_FOUND',
-    ALREADY_EXISTS = 'ALREADY_EXISTS',
+    notFound = 'NOT_FOUND',
+    alreadyExists = 'ALREADY_EXISTS',
 
     // Input Errors
-    BAD_USER_INPUT = 'BAD_USER_INPUT',
-    VALIDATION_ERROR = 'VALIDATION_ERROR',
+    badUserInput = 'BAD_USER_INPUT',
+    validationError = 'VALIDATION_ERROR',
 
     // Business Logic Errors
-    BUSINESS_RULE_VIOLATION = 'BUSINESS_RULE_VIOLATION',
+    businessRuleViolation = 'BUSINESS_RULE_VIOLATION',
 
     // System Errors
-    INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
-    DATABASE_ERROR = 'DATABASE_ERROR',
+    internalServerError = 'INTERNAL_SERVER_ERROR',
+    databaseError = 'DATABASE_ERROR',
 }
 
 /**
@@ -54,7 +54,7 @@ export class BaseGraphQLError extends GraphQLError {
  */
 export class AuthenticationError extends BaseGraphQLError {
     constructor(message = 'Not authenticated') {
-        super(message, ErrorCode.UNAUTHENTICATED, { statusCode: 401 });
+        super(message, ErrorCode.unauthenticated, { statusCode: 401 });
     }
 }
 
@@ -63,7 +63,7 @@ export class AuthenticationError extends BaseGraphQLError {
  */
 export class AuthorizationError extends BaseGraphQLError {
     constructor(message = 'Not authorized') {
-        super(message, ErrorCode.UNAUTHORIZED, { statusCode: 403 });
+        super(message, ErrorCode.unauthorizedAccess, { statusCode: 403 });
     }
 }
 
@@ -72,7 +72,7 @@ export class AuthorizationError extends BaseGraphQLError {
  */
 export class NotFoundError extends BaseGraphQLError {
     constructor(message = 'Resource not found') {
-        super(message, ErrorCode.NOT_FOUND, { statusCode: 404 });
+        super(message, ErrorCode.notFound, { statusCode: 404 });
     }
 }
 
@@ -81,7 +81,7 @@ export class NotFoundError extends BaseGraphQLError {
  */
 export class ResourceAlreadyExistsError extends BaseGraphQLError {
     constructor(message = 'Resource already exists') {
-        super(message, ErrorCode.ALREADY_EXISTS, { statusCode: 409 });
+        super(message, ErrorCode.alreadyExists, { statusCode: 409 });
     }
 }
 
@@ -90,7 +90,7 @@ export class ResourceAlreadyExistsError extends BaseGraphQLError {
  */
 export class UserInputError extends BaseGraphQLError {
     constructor(message: string, validationErrors?: Record<string, string>[]) {
-        super(message, ErrorCode.BAD_USER_INPUT, {
+        super(message, ErrorCode.badUserInput, {
             statusCode: 400,
             validationErrors,
         });
@@ -102,7 +102,7 @@ export class UserInputError extends BaseGraphQLError {
  */
 export class BusinessError extends BaseGraphQLError {
     constructor(message: string) {
-        super(message, ErrorCode.BUSINESS_RULE_VIOLATION, { statusCode: 422 });
+        super(message, ErrorCode.businessRuleViolation, { statusCode: 422 });
     }
 }
 
@@ -111,7 +111,7 @@ export class BusinessError extends BaseGraphQLError {
  */
 export class DatabaseError extends BaseGraphQLError {
     constructor(message = 'Database operation failed', originalError?: Error) {
-        super(message, ErrorCode.DATABASE_ERROR, {
+        super(message, ErrorCode.databaseError, {
             statusCode: 500,
             originalError,
         });
@@ -134,7 +134,7 @@ export function formatError(formattedError: GraphQLError, error: unknown): Graph
 
     // Fallback for unexpected errors
     const originalError = error instanceof Error ? error : new Error(String(error));
-    return new BaseGraphQLError('An unexpected error occurred', ErrorCode.INTERNAL_SERVER_ERROR, {
+    return new BaseGraphQLError('An unexpected error occurred', ErrorCode.internalServerError, {
         statusCode: 500,
         originalError,
     });
