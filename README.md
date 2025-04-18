@@ -1,71 +1,147 @@
-# NestJS GraphQL
+# BookVault GraphQL API
 
-## Description
+A NestJS GraphQL API for book rentals with MongoDB integration. This application provides a robust backend for managing authors, books, users, and rental transactions.
 
-Welcome to the **Nest-GraphQL** repository! This project showcases how to integrate **GraphQL** with **NestJS** using a code-first approach. The repository is structured into multiple modules, such as **Authors**, **Books**, **Users**, and **Rentals**, to demonstrate different functionalities that are commonly used in backend applications. Each module handles a specific domain while following best practices for NestJS and GraphQL integration.
+## Features
 
-## How to Setup
+- **GraphQL API**: Modern API using GraphQL for efficient data querying
+- **MongoDB Integration**: Persistence with MongoDB using Mongoose ODM
+- **Environment Configuration**: Structured configuration system for different environments
+- **Security Features**:
+  - CSRF Protection
+  - Rate Limiting
+  - Helmet Security Headers
+  - CORS Configuration
+- **Health Monitoring**: Endpoints for application and database health checking
 
-Follow these steps to get the project up and running on your local machine:
+## Technology Stack
 
-### 1. Clone the repository
+- [NestJS](https://nestjs.com/) - Progressive Node.js framework
+- [GraphQL](https://graphql.org/) - Query language for APIs
+- [Apollo Server](https://www.apollographql.com/docs/apollo-server/) - GraphQL server
+- [MongoDB](https://www.mongodb.com/) - NoSQL database
+- [Mongoose](https://mongoosejs.com/) - MongoDB object modeling
 
-```bash
-git clone git@github.com:Lakshya-Saini/Nest-GraphQL.git
+## Project Structure
+
+```
+src/
+├── app.module.ts              # Main application module
+├── main.ts                    # Application entry point
+├── schema.gql                 # Generated GraphQL schema
+├── authors/                   # Author domain module
+├── books/                     # Book domain module
+├── users/                     # User domain module
+├── rentals/                   # Rental domain module
+├── config/                    # Configuration module
+│   ├── envs/                  # Environment-specific configurations
+│   └── README.md              # Configuration documentation
+└── health/                    # Health check endpoints
 ```
 
-### 2. Install dependencies
+## ERD Diagram
+
+The database schema for this project is available in the root directory:
+- `book_rental_erd.png` - Visual representation of the database schema
+- `book_rental_erd.drawio` - Source file for the ERD diagram
+
+## Installation
 
 ```bash
+# Install dependencies
 npm install
 ```
 
-### 3. Run the application
+## Environment Setup
+
+The application uses environment-specific configurations. Setup the appropriate environment:
 
 ```bash
+# Development environment
+npm run env:dev
+
+# Production environment
+npm run env:prod
+
+# Test environment
+npm run env:test
+```
+
+Update the generated `.env.*` file with your specific configuration values.
+
+## Running the Application
+
+```bash
+# Development mode
 npm run start:dev
+
+# Production mode
+npm run start:prod
+
+# Debug mode
+npm run start:debug
 ```
 
-This will run the app locally at http://localhost:3000/graphql, where you can access the Apollo Server and test the queries and mutations for all the defined modules.
+## API Documentation
 
-## Modules
+Once the application is running, you can access the GraphQL playground at:
+- Development: http://localhost:3000/graphql
 
-This repository is organized into multiple branches, each containing the code for a specific module. Below is an overview of the available modules and their branches:
+The GraphQL playground provides interactive documentation for exploring the API.
 
-- **Authors Module**: Handles CRUD operations for authors, including adding, updating, deleting, and querying authors. You can check the code for this module in the [`authors_module`](https://github.com/Lakshya-Saini/Nest-GraphQL/tree/authors_module) branch.
+## Available GraphQL Resources
 
-- **Books Module**: Manages books, including operations such as creating, updating, and deleting books, as well as querying books by various filters. It also handles relationships between books and authors. You can find this module's code in the [`books_module`](https://github.com/Lakshya-Saini/Nest-GraphQL/tree/books_module) branch.
+### Authors
+- Query authors
+- Create, update, and delete authors
+- View books written by an author
 
-- **Users Module**: Manages users, focusing on user-related functionalities such as user creation, authentication, and role assignments. This module is available in the [`users_module`](https://github.com/Lakshya-Saini/Nest-GraphQL/tree/users_module) branch.
+### Books
+- Query books with filters
+- Create, update, and delete books
+- Associate books with authors
 
-- **Rentals Module**: Manages book rentals and their associations with users and books. This module's code can be found in the [`rentals_module`](https://github.com/Lakshya-Saini/Nest-GraphQL/tree/rentals_module) branch.
+### Users
+- User registration and management
+- User profile information
 
-Each of these modules is self-contained in its respective branch. You can switch to a specific branch if you're only interested in a particular module. Alternatively, you can explore the full, integrated project in the `master` branch, which includes all modules combined.
+### Rentals
+- Book checkout and return process
+- Rental history tracking
+- Due date management
 
-## GraphQL API Overview
-
-Once the application is running, you can explore the GraphQL API by opening the GraphQL playground at:
+## Testing
 
 ```bash
-http://localhost:3000/graphql
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
 ```
 
-In the playground, you can execute the following operations for each module:
+## Configuration
 
-- Authors: Create, update, delete authors, and query the list of authors or a single author.
-- Books: Manage books, query books by author, and handle relationships between books and authors.
-- Users & Rentals: The users and rentals modules work similarly with CRUD operations and relationships with books.
+The application uses a hierarchical configuration system with environment-specific settings. See `src/config/README.md` for detailed documentation on configuration options.
 
-## FAQ
+## Health Checks
 
-### 1. What is GraphQL?
+The application provides health check endpoints:
 
-GraphQL is a query language for APIs and a runtime for executing those queries by using type systems. It allows clients to request exactly the data they need, making APIs more flexible and efficient compared to RESTful services. Clients send a query to the GraphQL server, and the server responds with the exact shape of data requested.
+- GET `/health` - Overall application health
+- GET `/health/database` - Database connection status
 
-### 2. How do I use GraphQL with NestJS?
+## Contributing
 
-NestJS provides an out-of-the-box integration with GraphQL via the `@nestjs/graphql` package. This project follows the **code-first** approach, where the GraphQL schema is auto-generated from TypeScript classes and decorators.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit your changes: `git commit -am 'Add new feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Submit a pull request
 
-### 3. How can I test the GraphQL API?
+## License
 
-Once the application is running, navigate to the `/graphql` endpoint in your browser. You'll find an interactive GraphQL Playground, where you can explore the schema and run queries or mutations directly.
+This project is licensed under the [UNLICENSED](LICENSE) license.
