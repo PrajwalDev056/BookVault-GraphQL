@@ -12,14 +12,14 @@ import { User, UserSchema } from '../users/users.schema';
 import { UsersService } from '../users/users.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: Rental.name, schema: RentalSchema },
-      { name: User.name, schema: UserSchema },
-      { name: Book.name, schema: BookSchema },
-      { name: Author.name, schema: AuthorSchema },
-    ]),
-  ],
-  providers: [RentalsResolver, RentalsService, UsersService, BooksService, AuthorsService],
+    imports: [
+        MongooseModule.forFeature([
+            { name: Rental.name, schema: RentalSchema },
+            { name: User.name, schema: UserSchema },
+            { name: Book.name, schema: BookSchema },
+            { name: Author.name, schema: AuthorSchema },
+        ]),
+    ],
+    providers: [RentalsResolver, RentalsService, UsersService, BooksService, AuthorsService],
 })
 export class RentalsModule {}

@@ -10,27 +10,27 @@ export type RentalDocument = Rental & mongoose.Document;
 @Schema()
 @ObjectType()
 export class Rental {
-  @Field(() => ID)
+    @Field(() => ID)
     _id: number;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     dateRented: Date;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
-  @Field(() => User)
+    @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
+    @Field(() => User)
     userId: User;
 
-  @Prop()
-  @Field(() => [Book])
+    @Prop()
+    @Field(() => [Book])
     bookIds: Book[];
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     createdAt: Date;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     updatedAt: Date;
 }
 
@@ -38,21 +38,21 @@ export const RentalSchema = SchemaFactory.createForClass(Rental);
 
 @InputType()
 export class FindRentalInput {
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     _id: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     dateRented: Date;
 }
 
 @InputType()
 export class CreateRentalInput {
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     dateRented?: Date;
 
-  @Field(() => ID, { nullable: true })
+    @Field(() => ID, { nullable: true })
     userId?: string;
 
-  @Field(() => [ID], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     bookIds?: string[];
 }

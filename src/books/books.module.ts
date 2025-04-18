@@ -9,13 +9,13 @@ import { Author, AuthorSchema } from '../authors/authors.schema';
 import { AuthorsService } from '../authors/authors.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: Book.name, schema: BookSchema },
-      { name: Author.name, schema: AuthorSchema },
-    ]),
-    forwardRef(() => AuthorsModule),
-  ],
-  providers: [BooksService, BooksResolver, AuthorsService],
+    imports: [
+        MongooseModule.forFeature([
+            { name: Book.name, schema: BookSchema },
+            { name: Author.name, schema: AuthorSchema },
+        ]),
+        forwardRef(() => AuthorsModule),
+    ],
+    providers: [BooksService, BooksResolver, AuthorsService],
 })
 export class BooksModule {}

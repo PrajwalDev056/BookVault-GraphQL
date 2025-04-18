@@ -15,39 +15,39 @@ export type AuthorDocument = Author & mongoose.Document;
 @Schema()
 @ObjectType()
 export class Author {
-  /**
+    /**
     Defines the _id field in the GraphQL schema as an ID type. 
     In GraphQL, ID is a special scalar type used to represent unique identifiers.
   */
-  @Field(() => ID)
+    @Field(() => ID)
     _id: number;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     name: string;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     email: string;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     phone: string;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     country: string;
 
-  @Prop()
-  @Field(() => [Book])
+    @Prop()
+    @Field(() => [Book])
     bookIds: Book[];
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     createdAt: Date;
 
-  @Prop()
-  @Field()
+    @Prop()
+    @Field()
     updatedAt: Date;
 }
 
@@ -59,51 +59,51 @@ export const AuthorSchema = SchemaFactory.createForClass(Author);
 
 @InputType()
 export class FindAuthorInput {
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     _id?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     name?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     email?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     phone?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     country?: string;
 }
 
 @InputType()
 export class CreateAuthorInput {
-  @Field()
+    @Field()
     name: string;
 
-  @Field()
+    @Field()
     email: string;
 
-  @Field()
+    @Field()
     phone: string;
 
-  @Field()
+    @Field()
     country: string;
 }
 
 @InputType()
 export class UpdateAuthorInput {
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     name?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     email?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     phone?: string;
 
-  @Field({ nullable: true })
+    @Field({ nullable: true })
     country?: string;
 
-  @Field(() => [ID], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     bookIds?: string[];
 }

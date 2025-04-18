@@ -9,17 +9,17 @@ import { Book, BookSchema } from '../books/books.schema';
 import { BooksService } from '../books/books.service';
 
 @Module({
-  /**
+    /**
     This forFeature method is used to define which models should be registered in the 
     current module. It takes an array of objects, each containing a name and a schema.
   */
-  imports: [
-    MongooseModule.forFeature([
-      { name: Author.name, schema: AuthorSchema },
-      { name: Book.name, schema: BookSchema },
-    ]),
-    forwardRef(() => BooksModule),
-  ],
-  providers: [AuthorsService, AuthorsResolver, BooksService],
+    imports: [
+        MongooseModule.forFeature([
+            { name: Author.name, schema: AuthorSchema },
+            { name: Book.name, schema: BookSchema },
+        ]),
+        forwardRef(() => BooksModule),
+    ],
+    providers: [AuthorsService, AuthorsResolver, BooksService],
 })
 export class AuthorsModule {}

@@ -1,9 +1,10 @@
 {
   "default": true,
-  "line-length": {
+  "MD013": {
     "line_length": 100,
     "code_blocks": false,
-    "tables": false
+    "tables": false,
+    "headings": true
   },
   "no-trailing-spaces": true,
   "no-hard-tabs": true,
@@ -24,5 +25,8 @@
   "no-trailing-punctuation": {
     "punctuation": ".,;:!"
   },
-  "commands-show-output": false
+  "commands-show-output": false,
+  "ul-indent": {
+    "indent": 2
+  }
 }

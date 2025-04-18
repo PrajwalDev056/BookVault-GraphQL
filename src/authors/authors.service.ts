@@ -3,72 +3,72 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
 import {
-  Author,
-  AuthorDocument,
-  CreateAuthorInput,
-  FindAuthorInput,
-  UpdateAuthorInput,
+    Author,
+    AuthorDocument,
+    CreateAuthorInput,
+    FindAuthorInput,
+    UpdateAuthorInput,
 } from './authors.schema';
 
 @Injectable()
 export class AuthorsService {
-  /** Inject the Mongoose model for the Author schema */
-  constructor(@InjectModel(Author.name) private authorModel: Model<AuthorDocument>) {}
+    /** Inject the Mongoose model for the Author schema */
+    constructor(@InjectModel(Author.name) private authorModel: Model<AuthorDocument>) {}
 
-  async getAllAuthors(params: FindAuthorInput): Promise<AuthorDocument[]> {
-    const authors = await this.authorModel.find(params || {}).exec();
-    if (!authors.length) {
-      throw new NotFoundException('No authors found');
+    async getAllAuthors(params: FindAuthorInput): Promise<AuthorDocument[]> {
+        const authors = await this.authorModel.find(params || {}).exec();
+        if (!authors.length) {
+            throw new NotFoundException('No authors found');
+        }
+        return authors;
     }
-    return authors;
-  }
 
-  async findAuthorsById(id: string): Promise<AuthorDocument> {
-    const author = await this.authorModel.findById(id).exec();
-    if (!author._id) {
-      throw new NotFoundException('Author details not found');
+    async findAuthorsById(id: string): Promise<AuthorDocument> {
+        const author = await this.authorModel.findById(id).exec();
+        if (!author._id) {
+            throw new NotFoundException('Author details not found');
+        }
+        return author;
     }
-    return author;
-  }
 
-  async findByBookId(id: string | number): Promise<AuthorDocument[]> {
-    const author = await this.authorModel.find().where('bookIds').in([id]).exec();
-    if (!author.length) {
-      throw new NotFoundException('Author details not found');
+    async findByBookId(id: string | number): Promise<AuthorDocument[]> {
+        const author = await this.authorModel.find().where('bookIds').in([id]).exec();
+        if (!author.length) {
+            throw new NotFoundException('Author details not found');
+        }
+        return author;
     }
-    return author;
-  }
 
-  async createAuthor(params: CreateAuthorInput): Promise<AuthorDocument> {
-    const author = await this.authorModel.create({
-      ...params,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-    if (!author._id) {
-      throw new HttpException('Failed to create author', 417);
+    async createAuthor(params: CreateAuthorInput): Promise<AuthorDocument> {
+        const author = await this.authorModel.create({
+            ...params,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        });
+        if (!author._id) {
+            throw new HttpException('Failed to create author', 417);
+        }
+        return author;
     }
-    return author;
-  }
 
-  async updateAuthor(id: string, params: UpdateAuthorInput): Promise<AuthorDocument> {
-    const bookIds = params.bookIds && params.bookIds.map(id => new Types.ObjectId(id));
-    delete params['bookIds'];
+    async updateAuthor(id: string, params: UpdateAuthorInput): Promise<AuthorDocument> {
+        const bookIds = params.bookIds && params.bookIds.map(id => new Types.ObjectId(id));
+        delete params['bookIds'];
 
-    const author = await this.authorModel
-      .updateOne(
-        { _id: new Types.ObjectId(id) },
-        { ...params, $push: { bookIds: { $each: bookIds } } },
-      )
-      .exec();
-    if (author.modifiedCount == 0) {
-      throw new HttpException('Failed to update author', 417);
+        const author = await this.authorModel
+            .updateOne(
+                { _id: new Types.ObjectId(id) },
+                { ...params, $push: { bookIds: { $each: bookIds } } },
+            )
+            .exec();
+        if (author.modifiedCount == 0) {
+            throw new HttpException('Failed to update author', 417);
+        }
+        return await this.findAuthorsById(id);
     }
-    return await this.findAuthorsById(id);
-  }
 
-  async deleteAuthor(id: string): Promise<AuthorDocument | null> {
-    const author = await this.authorModel.findByIdAndDelete(id).exec();
-    return author;
-  }
+    async deleteAuthor(id: string): Promise<AuthorDocument | null> {
+        const author = await this.authorModel.findByIdAndDelete(id).exec();
+        return author;
+    }
 }

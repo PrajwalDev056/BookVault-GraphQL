@@ -2,7 +2,15 @@
 
 ## Project Overview
 
-BookVault is a GraphQL-based API built with NestJS and MongoDB that provides a complete solution for book rental management. It implements a robust domain model with authors, books, users, and rental transactions, along with security features and configuration management.
+- **GraphQL-based API**: Built with NestJS and MongoDB for efficient and scalable book rental
+  management.
+- **Comprehensive domain model**: Manages authors, books, users, and rental transactions with clear
+  relationships.
+- **Security features**: Implements best practices for authentication, authorization, and data
+  protection.
+- **Configuration management**: Supports environment-specific settings for flexibility and
+  scalability.
+- **Extensible architecture**: Designed for easy integration of new features and modules.
 
 ## System Architecture
 
@@ -229,17 +237,20 @@ The project includes a testing framework configuration:
 The project uses ESLint to enforce code quality and consistent style:
 
 - **TypeScript Conventions**:
+
   - Strict typing with explicit return types
   - Proper casing (camelCase for properties/methods, PascalCase for classes/interfaces)
   - No unused variables or parameters
   - Limited use of `any` type
 
 - **Import Organization**:
+
   - Imports are organized by groups (external, internal, relative)
   - Alphabetical sorting within groups
   - Required spacing between import groups
 
 - **Error Handling**:
+
   - No throwing of literal values
   - Proper error object usage
   - Custom GraphQL error handling
@@ -280,13 +291,13 @@ Automatic code quality checks are enforced using Git hooks:
   ```bash
   # Lint and fix all TypeScript/JavaScript files
   npm run lint
-  
+
   # Check linting without fixing
   npm run lint:check
-  
+
   # Lint and fix markdown files
   npm run lint:md
-  
+
   # Run linting on staged files
   npm run lint:staged
   ```
@@ -336,10 +347,7 @@ query {
 
 ```graphql
 mutation {
-  createAuthor(createAuthorInput: {
-    name: "Jane Doe",
-    bio: "Contemporary fiction author"
-  }) {
+  createAuthor(createAuthorInput: { name: "Jane Doe", bio: "Contemporary fiction author" }) {
     id
     name
   }
@@ -350,11 +358,9 @@ mutation {
 
 ```graphql
 mutation {
-  createRental(createRentalInput: {
-    userId: "user-id",
-    bookId: "book-id",
-    dueDate: "2025-05-18T00:00:00Z"
-  }) {
+  createRental(
+    createRentalInput: { userId: "user-id", bookId: "book-id", dueDate: "2025-05-18T00:00:00Z" }
+  ) {
     id
     rentalDate
     dueDate
@@ -380,4 +386,8 @@ Potential areas for future development include:
 
 ## Conclusion
 
-The BookVault GraphQL API provides a modern, secure, and well-structured system for book rental management. With its comprehensive domain model, robust configuration system, and security features, it serves as an excellent foundation for building book rental applications and services.
+<!-- The BookVault GraphQL API delivers a secure, scalable, and maintainable platform for book rental
+management. Its modular architecture, strict TypeScript conventions, and robust security practices
+make it a strong foundation for developing advanced book rental solutions. With clear documentation,
+consistent code quality, and extensible design, BookVault is well-suited for both current needs and
+future enhancements. -->
