@@ -2,15 +2,14 @@ import * as Joi from 'joi';
 
 export const validationSchema = Joi.object({
     // Node environment
-    nodeEnv: Joi.string()
+    NODE_ENV: Joi.string()
         .valid('development', 'production', 'test')
         .default('development')
-        .description('Application environment')
-        .label('NODE_ENV'),
-    port: Joi.number().default(3000).description('Application port').label('PORT'),
+        .description('Application environment'),
+    PORT: Joi.number().default(3000).description('Application port'),
 
     // MongoDB connection
-    mongodbUri: Joi.string()
+    MONGODB_URI: Joi.string()
         .uri({
             scheme: ['mongodb', 'mongodb+srv'],
         })
@@ -21,33 +20,19 @@ export const validationSchema = Joi.object({
         .required()
         .description(
             'MongoDB connection string in the format mongodb://[username:password@]host[:port][/database][?options]',
-        )
-        .label('MONGODB_URI'),
-    mongodbDbName: Joi.string()
-        .required()
-        .description('MongoDB database name')
-        .label('MONGODB_DB_NAME'),
+        ),
+    MONGODB_DB_NAME: Joi.string().required().description('MongoDB database name'),
 
     // CORS settings
-    allowedOrigins: Joi.string()
+    ALLOWED_ORIGINS: Joi.string()
         .default('http://localhost:4200')
-        .description('Allowed CORS origins')
-        .label('ALLOWED_ORIGINS'),
+        .description('Allowed CORS origins'),
 
     // Security settings
-    csrfSecret: Joi.string().required().description('CSRF protection secret').label('CSRF_SECRET'),
-    jsonLimit: Joi.string()
-        .default('50mb')
-        .description('JSON request size limit')
-        .label('JSON_LIMIT'),
+    CSRF_SECRET: Joi.string().required().description('CSRF protection secret'),
+    JSON_LIMIT: Joi.string().default('50mb').description('JSON request size limit'),
 
     // Rate limiting
-    throttleTtl: Joi.number()
-        .default(60000)
-        .description('Throttling time-to-live in ms')
-        .label('THROTTLE_TTL'),
-    throttleLimit: Joi.number()
-        .default(10)
-        .description('Throttling request limit')
-        .label('THROTTLE_LIMIT'),
+    THROTTLE_TTL: Joi.number().default(60000).description('Throttling time-to-live in ms'),
+    THROTTLE_LIMIT: Joi.number().default(10).description('Throttling request limit'),
 }).unknown();

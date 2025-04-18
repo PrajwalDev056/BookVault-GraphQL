@@ -66,9 +66,21 @@ module.exports = [
                     selector: 'typeLike',
                     format: ['PascalCase'],
                 },
+                // Allow UPPER_CASE for constants and environment variable names
                 {
-                    selector: 'typeLike',
-                    format: ['UPPER_CASE'],
+                    selector: 'property',
+                    format: ['camelCase', 'UPPER_CASE'],
+                    leadingUnderscore: 'allow',
+                },
+                {
+                    selector: 'variable',
+                    format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+                    leadingUnderscore: 'allow',
+                },
+                {
+                    selector: 'parameter',
+                    format: ['camelCase'],
+                    leadingUnderscore: 'allow',
                 },
             ],
 
