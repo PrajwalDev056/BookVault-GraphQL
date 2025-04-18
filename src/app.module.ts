@@ -24,8 +24,12 @@ import { ThrottlerModule } from '@nestjs/throttler';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     ThrottlerModule.forRoot({
-      ttl: 60, // time to live in seconds
-      limit: 30, // max requests per ttl per IP
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
     }),
     AuthorsModule,
     BooksModule,
@@ -35,4 +39,4 @@ import { ThrottlerModule } from '@nestjs/throttler';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

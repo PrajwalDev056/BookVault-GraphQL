@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(json({ limit: '50mb' }));
+  // Helmet is applied before CORS to ensure security headers are set without conflicts.
   app.use(helmet());
   app.enableCors();
 
