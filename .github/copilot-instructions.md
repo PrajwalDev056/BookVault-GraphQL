@@ -42,7 +42,8 @@ users, and rentals to promote separation of concerns and maintainability.
 
 ## Markdown Linting
 
-- Follow [markdownlint rules](https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md) for consistent and readable markdown files.
+- Follow [markdownlint rules](https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md)
+  to ensure consistent and readable markdown files. Keep each line under 100 characters.
 - Use proper heading levels, bullet points, and code block formatting.
 - Avoid trailing spaces and ensure line length does not exceed recommended limits.
 - Include a blank line before and after headings and lists.
