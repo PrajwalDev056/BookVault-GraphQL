@@ -40,7 +40,7 @@ async function bootstrap() {
   });
 
   // Configure CSRF protection with environment-aware settings
-  const { doubleCsrfProtection } = doubleCsrf({
+  const { doubleCsrfProtection, generateToken } = doubleCsrf({
     getSecret: () => configService.security.csrfSecret,
     cookieName: 'x-csrf-token',
     cookieOptions: {
@@ -53,8 +53,22 @@ async function bootstrap() {
     getTokenFromRequest: (req) => req.get('x-csrf-token'),
   });
 
-  // Apply CSRF middleware
-  app.use(doubleCsrfProtection);
+  // Apply CSRF middleware with exclusion for GraphQL paths
+  app.use((req, res, next) => {
+    // Skip CSRF protection for GraphQL endpoints
+    if (req.path === '/graphql') {
+      return next();
+    }
+    
+    // Apply CSRF protection to all other routes
+    return doubleCsrfProtection(req, res, next);
+  });
+
+  // Provide a route to get CSRF token for non-GraphQL routes
+  app.use('/csrf-token', (req, res) => {
+    const token = generateToken(req, res);
+    return res.json({ token });
+  });
 
   // Start server with configuration from current environment
   await app.listen(configService.port);
