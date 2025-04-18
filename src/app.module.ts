@@ -48,6 +48,7 @@ import { HealthModule } from './health/health.module';
       driver: ApolloDriver,
       useFactory: (configService: AppConfigService) => ({
         driver: ApolloDriver,
+        playground: false, // Disable GraphQL Playground in production
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         introspection: !configService.isProduction,
         plugins: configService.isDevelopment
