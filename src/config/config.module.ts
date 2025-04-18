@@ -1,17 +1,33 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './validation.schema';
+import developmentConfig from './envs/development';
+import productionConfig from './envs/production';
+import testConfig from './envs/test';
 
+/**
+ * Configuration module that loads environment-specific configuration
+ * based on NODE_ENV and validates environment variables
+ */
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: '.env',
+            envFilePath: `.env${process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''}`,
+            load: [
+                process.env.NODE_ENV === 'production'
+                    ? productionConfig
+                    : process.env.NODE_ENV === 'test'
+                        ? testConfig
+                        : developmentConfig
+            ],
             validationSchema,
             validationOptions: {
                 allowUnknown: true,
                 abortEarly: false,
             },
+            cache: true,
+            expandVariables: true,
         }),
     ],
 })

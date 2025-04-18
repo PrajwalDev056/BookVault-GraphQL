@@ -6,8 +6,17 @@ export const validationSchema = Joi.object({
     PORT: Joi.number().default(3000),
 
     // MongoDB connection
-    MONGODB_URI: Joi.string().default('mongodb://localhost:27017'),
-    MONGODB_DB_NAME: Joi.string().default('graphQL'),
+    MONGODB_URI: Joi.string()
+        .uri({
+            scheme: ['mongodb', 'mongodb+srv']
+        })
+        .regex(/^mongodb(\+srv)?:\/\/(?:(?:[^:]+):(?:[^@]+)@)?(?:(?:[^:]+)|\[(?:[^\]]+)\])(?::(?:\d+))?(?:\/(?:[^?]+))?(?:\?(?:.+=.+)(?:&.+=.+)*)?$/)
+        .message('MONGODB_URI must be a valid MongoDB connection string')
+        .required()
+        .description('MongoDB connection string in the format mongodb://[username:password@]host[:port][/database][?options]'),
+    MONGODB_DB_NAME: Joi.string()
+        .required()
+        .description('MongoDB database name'),
 
     // CORS settings
     ALLOWED_ORIGINS: Joi.string().default('http://localhost:4200'),

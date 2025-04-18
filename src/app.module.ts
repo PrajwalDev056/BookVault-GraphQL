@@ -14,6 +14,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -21,35 +22,48 @@ import { AppConfigService } from './config/config.service';
 
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI') || 'mongodb://localhost:27017',
-        dbName: configService.get<string>('MONGODB_DB_NAME') || 'graphQL',
+      inject: [AppConfigService],
+      useFactory: async (configService: AppConfigService) => ({
+        uri: configService.database.uri,
+        dbName: configService.database.name,
+        ...configService.database.options,
+        connectionFactory: (connection) => {
+          connection.on('connected', () => {
+            console.log(`MongoDB connection established to ${configService.database.name}`);
+          });
+          connection.on('error', (error) => {
+            console.error('MongoDB connection error:', error);
+          });
+          connection.on('disconnected', () => {
+            console.log('MongoDB connection disconnected');
+          });
+          return connection;
+        },
       }),
     }),
 
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [ConfigModule],
+      inject: [AppConfigService],
       driver: ApolloDriver,
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: AppConfigService) => ({
         driver: ApolloDriver,
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-        // Disable all plugins and related features
-        plugins: [],
-        introspection: false,
-        playground: false, // Legacy option, but add it to be sure
+        introspection: !configService.isProduction,
+        plugins: configService.isDevelopment 
+          ? [ApolloServerPluginLandingPageLocalDefault()]
+          : [],
       }),
     }),
 
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => ({
         throttlers: [
           {
-            ttl: configService.get<number>('THROTTLE_TTL') || 60000,
-            limit: configService.get<number>('THROTTLE_LIMIT') || 10,
+            ttl: configService.throttling.ttl,
+            limit: configService.throttling.limit,
           },
         ],
       }),
@@ -59,6 +73,7 @@ import { AppConfigService } from './config/config.service';
     BooksModule,
     UsersModule,
     RentalsModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppConfigService],
