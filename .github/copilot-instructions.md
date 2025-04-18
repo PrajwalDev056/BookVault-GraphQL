@@ -36,3 +36,11 @@ This is a NestJS GraphQL API for book rental management with MongoDB integration
 - Use environment-specific configuration files
 - Validate environment variables with Joi schema
 - Access configuration through AppConfigService
+
+## Markdown Linting
+
+- Follow [markdownlint rules](https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md) for consistent and readable markdown files.
+- Use proper heading levels, bullet points, and code block formatting.
+- Avoid trailing spaces and ensure line length does not exceed recommended limits.
+- Include a blank line before and after headings and lists.
+- Use fenced code blocks for code snippets.

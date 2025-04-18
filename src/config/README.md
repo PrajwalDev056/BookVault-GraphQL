@@ -70,3 +70,4 @@ const isProduction = this.configService.isProduction;
 2. Add validation in `src/config/validation.schema.ts`
 3. Add accessor in `src/config/config.service.ts`
 4. Update example files and documentation
+[EOF]

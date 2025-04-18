@@ -24,7 +24,7 @@ A NestJS GraphQL API for book rentals with MongoDB integration. This application
 
 ## Project Structure
 
-```
+```plaintext
 src/
 ├── app.module.ts              # Main application module
 ├── main.ts                    # Application entry point
@@ -42,6 +42,7 @@ src/
 ## ERD Diagram
 
 The database schema for this project is available in the root directory:
+
 - `book_rental_erd.png` - Visual representation of the database schema
 - `book_rental_erd.drawio` - Source file for the ERD diagram
 
@@ -85,27 +86,32 @@ npm run start:debug
 ## API Documentation
 
 Once the application is running, you can access the GraphQL playground at:
-- Development: http://localhost:3000/graphql
+
+- Development: [http://localhost:3000/graphql](http://localhost:3000/graphql)
 
 The GraphQL playground provides interactive documentation for exploring the API.
 
 ## Available GraphQL Resources
 
 ### Authors
+
 - Query authors
 - Create, update, and delete authors
 - View books written by an author
 
 ### Books
+
 - Query books with filters
 - Create, update, and delete books
 - Associate books with authors
 
 ### Users
+
 - User registration and management
 - User profile information
 
 ### Rentals
+
 - Book checkout and return process
 - Rental history tracking
 - Due date management
@@ -145,3 +151,4 @@ The application provides health check endpoints:
 ## License
 
 This project is licensed under the [UNLICENSED](LICENSE) license.
+[EOF]

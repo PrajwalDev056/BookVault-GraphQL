@@ -17,7 +17,7 @@ BookVault is a GraphQL-based API built with NestJS and MongoDB that provides a c
 
 ### Architecture Diagram
 
-```
+```ascii
 ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
 │                 │      │                 │      │                 │
 │  GraphQL API    │◄────►│  NestJS Modules │◄────►│    MongoDB      │
@@ -312,3 +312,4 @@ Potential areas for future development include:
 ## Conclusion
 
 The BookVault GraphQL API provides a modern, secure, and well-structured system for book rental management. With its comprehensive domain model, robust configuration system, and security features, it serves as an excellent foundation for building book rental applications and services.
+[EOF]
