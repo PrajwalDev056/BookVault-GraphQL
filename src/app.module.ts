@@ -10,6 +10,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { BooksModule } from './books/books.module';
 import { UsersModule } from './users/users.module';
 import { RentalsModule } from './rentals/rentals.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -21,6 +22,10 @@ import { RentalsModule } from './rentals/rentals.module';
       playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 60, // time to live in seconds
+      limit: 30, // max requests per ttl per IP
     }),
     AuthorsModule,
     BooksModule,
