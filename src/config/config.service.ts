@@ -63,8 +63,7 @@ export class AppConfigService {
             uri: this.configService.get<string>('database.uri'),
             name: this.configService.get<string>('database.name'),
             options: this.configService.get<Record<string, any>>('database.options') || {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
+                // Removed deprecated options: useNewUrlParser and useUnifiedTopology
                 serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of default 30s
                 heartbeatFrequencyMS: 10000, // Check server health every 10 seconds
                 maxPoolSize: 10, // Maximum number of sockets to keep in connection pool

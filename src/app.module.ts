@@ -21,7 +21,7 @@ import { HealthModule } from './health/health.module';
     AppConfigModule,
 
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AppConfigModule],
       inject: [AppConfigService],
       useFactory: async (configService: AppConfigService) => ({
         uri: configService.database.uri,
@@ -43,7 +43,7 @@ import { HealthModule } from './health/health.module';
     }),
 
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      imports: [ConfigModule],
+      imports: [AppConfigModule],
       inject: [AppConfigService],
       driver: ApolloDriver,
       useFactory: (configService: AppConfigService) => ({
@@ -58,7 +58,7 @@ import { HealthModule } from './health/health.module';
     }),
 
     ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AppConfigModule],
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => ({
         throttlers: [

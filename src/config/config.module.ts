@@ -4,6 +4,7 @@ import { validationSchema } from './validation.schema';
 import developmentConfig from './envs/development';
 import productionConfig from './envs/production';
 import testConfig from './envs/test';
+import { AppConfigService } from './config.service';
 
 /**
  * Configuration module that loads environment-specific configuration
@@ -30,5 +31,7 @@ import testConfig from './envs/test';
             expandVariables: true,
         }),
     ],
+    providers: [AppConfigService],
+    exports: [AppConfigService],
 })
 export class AppConfigModule { }

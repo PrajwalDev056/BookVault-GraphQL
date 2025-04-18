@@ -8,8 +8,6 @@ export default () => ({
         options: {
             retryWrites: true,
             w: 'majority',
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             maxPoolSize: 10,
         },
     },

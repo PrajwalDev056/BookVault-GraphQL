@@ -38,3 +38,7 @@ src/schema.gql.env
 src/schema.gql
 
 .env
+.env.development
+.env.test
+.env.production
+.env.local
