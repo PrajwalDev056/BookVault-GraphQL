@@ -98,11 +98,17 @@ npm run start:debug
 
 ## API Documentation
 
-Once the application is running, you can access the GraphQL playground at:
+Once the application is running, you can access the GraphQL API interface at:
 
 - Development: [http://localhost:3000/graphql](http://localhost:3000/graphql)
 
-The GraphQL playground provides interactive documentation for exploring the API.
+The Apollo Explorer interface provides interactive documentation for exploring the API, including:
+
+- Schema documentation
+- Query building with autocompletion
+- Request history
+- Variables management
+- Response formatting
 
 ## Available GraphQL Resources
 

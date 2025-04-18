@@ -6,7 +6,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { AuthorsModule } from './authors/authors.module';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { BooksModule } from './books/books.module';
 import { UsersModule } from './users/users.module';
 import { RentalsModule } from './rentals/rentals.module';
@@ -15,6 +14,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/config.service';
 import { HealthModule } from './health/health.module';
+import { formatError } from './common/errors/graphql-errors';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 @Module({
   imports: [
@@ -46,14 +47,30 @@ import { HealthModule } from './health/health.module';
       imports: [AppConfigModule],
       inject: [AppConfigService],
       driver: ApolloDriver,
-      useFactory: (configService: AppConfigService) => ({
+      useFactory: (configService: AppConfigService): ApolloDriverConfig => ({
         driver: ApolloDriver,
-        playground: false, // Disable GraphQL Playground in production
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-        introspection: !configService.isProduction,
-        plugins: configService.isDevelopment
-          ? [ApolloServerPluginLandingPageLocalDefault()]
-          : [],
+        sortSchema: true,
+        introspection: true, // Always enable introspection for Apollo Explorer
+        playground: false, // GraphQL Playground is deprecated in Apollo Server v4
+
+        // Configuration for Apollo Server v4 landing page
+        plugins: [
+          ApolloServerPluginLandingPageLocalDefault(), // Enable the default Apollo Explorer
+        ],
+
+        // Security settings
+        csrfPrevention: false, // Disable Apollo's CSRF as we have our own implementation
+        includeStacktraceInErrorResponses: !configService.isProduction,
+
+        // Set proper error formatting
+        formatError: (error: import('graphql').GraphQLError) => formatError(error, configService.isDevelopment),
+
+        // Pass request context
+        context: ({ req, res }): { req: any; res: any } => ({ req, res }),
+
+        // Performance settings
+        cache: 'bounded',
       }),
     }),
 

@@ -6,7 +6,7 @@ import { doubleCsrf } from 'csrf-csrf';
 import { AppConfigService } from './config/config.service';
 import { Logger } from '@nestjs/common';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   // Create environment-aware logger
   const logger = new Logger('Bootstrap');
 
@@ -26,17 +26,35 @@ async function bootstrap() {
 
   app.use(json({ limit: configService.security.jsonLimit }));
 
-  // Helmet is applied before CORS to ensure security headers are set without conflicts
+  // Configure Helmet with Apollo Server v4 compatible settings
   app.use(helmet({
-    contentSecurityPolicy: configService.isProduction ? undefined : false,
+    contentSecurityPolicy: configService.isProduction
+      ? {
+        directives: {
+          defaultSrc: ["'self'"],
+          baseUri: ["'self'"],
+          fontSrc: ["'self'", 'https:', 'data:'],
+          frameAncestors: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          objectSrc: ["'none'"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://apollo-server-landing-page.cdn.apollographql.com"],
+          scriptSrcAttr: ["'none'"],
+          styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+          // Allow Apollo Explorer to load
+          connectSrc: ["'self'", "https://explorer.api.apollographql.com"],
+          upgradeInsecureRequests: [],
+        },
+      }
+      : false,
+    crossOriginEmbedderPolicy: false, // Required for Apollo Explorer to work properly
   }));
 
-  // Configure CORS with restrictive settings based on environment
+  // Configure CORS with settings compatible with Apollo Server v4
   app.enableCors({
     origin: configService.cors.allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Apollo-Require-Preflight'],
   });
 
   // Configure CSRF protection with environment-aware settings
@@ -59,7 +77,7 @@ async function bootstrap() {
     if (req.path === '/graphql') {
       return next();
     }
-    
+
     // Apply CSRF protection to all other routes
     return doubleCsrfProtection(req, res, next);
   });
