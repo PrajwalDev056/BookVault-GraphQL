@@ -9,7 +9,8 @@ export class UsersResolver {
 
     @Query(() => [User], { name: 'users' })
     async getAllUsers(@Args('params') params: FindUserInput): Promise<User[]> {
-        return this.userService.getAllUsers(params) ?? [];
+        // Service should already return User[], return an empty array if nothing is found
+        return (await this.userService.getAllUsers(params)) ?? [];
     }
 
     @Query(() => User, { name: 'user' })

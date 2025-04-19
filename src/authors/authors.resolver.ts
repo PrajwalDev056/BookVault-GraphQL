@@ -18,12 +18,12 @@ export class AuthorsResolver {
     ) {}
 
     @Query(() => [Author], { name: 'authors' })
-    async getAllAuthors(@Args('params') params: FindAuthorInput): Promise<Author[]> {
+    async getAllAuthors(@Args('params') params: FindAuthorInput): Promise<Author[] | undefined> {
         return this.authorService.getAllAuthors(params);
     }
 
     @Query(() => Author, { name: 'author' })
-    async findAuthorById(@Args('params') { _id }: FindAuthorInput): Promise<Author | void> {
+    async findAuthorById(@Args('params') { _id }: FindAuthorInput): Promise<Author | undefined> {
         return await this.authorService.findAuthorsById(_id);
     }
 
