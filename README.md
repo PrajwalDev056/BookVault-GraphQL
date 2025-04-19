@@ -1,6 +1,13 @@
 # BookVault GraphQL API
 
-A NestJS GraphQL API for book rentals with MongoDB integration. This application provides a robust backend for managing authors, books, users, and rental transactions.
+- A NestJS GraphQL API for book rentals with MongoDB integration.
+- Provides a robust backend for managing:
+  - Authors
+  - Books
+  - Users
+  - Rental transactions
+- Designed for efficient, secure, and scalable book rental management.
+- Follows domain-driven structure and best practices for API development.
 
 ## Features
 
@@ -150,7 +157,12 @@ npm run test:cov
 
 ## Configuration
 
-The application uses a hierarchical configuration system with environment-specific settings. See `src/config/README.md` for detailed documentation on configuration options.
+- The application uses a hierarchical configuration system with environment-specific settings.
+- Configuration files are located in `src/config/envs/` for development, production, and test environments.
+- All configuration options are documented in `src/config/README.md`.
+- Environment variables are validated using a Joi schema to ensure correctness.
+- Access configuration values throughout the app via the `AppConfigService`.
+- Update the relevant `.env.*` file to customize your setup.
 
 ## Health Checks
 

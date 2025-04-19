@@ -1,0 +1,32 @@
+{
+  "default": true,
+  "MD013": {
+    "line_length": 100,
+    "code_blocks": false,
+    "tables": false,
+    "headings": true
+  },
+  "no-trailing-spaces": true,
+  "no-hard-tabs": true,
+  "no-duplicate-heading": {
+    "siblings_only": true
+  },
+  "no-multiple-blanks": {
+    "maximum": 1
+  },
+  "list-marker-space": true,
+  "ul-style": {
+    "style": "dash"
+  },
+  "no-inline-html": false,
+  "hr-style": {
+    "style": "---"
+  },
+  "no-trailing-punctuation": {
+    "punctuation": ".,;:!"
+  },
+  "commands-show-output": false,
+  "ul-indent": {
+    "indent": 2
+  }
+}

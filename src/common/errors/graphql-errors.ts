@@ -1,176 +1,141 @@
-import { ApolloServerErrorCode } from '@apollo/server/errors';
 import { GraphQLError } from 'graphql';
 
 /**
- * Custom GraphQL error codes for consistent error handling
+ * Custom GraphQL error codes
  */
 export enum ErrorCode {
-    // Authentication errors
-    UNAUTHENTICATED = 'UNAUTHENTICATED',
-    UNAUTHORIZED = 'UNAUTHORIZED',
+    // Authentication / Authorization Errors
+    unauthenticated = 'UNAUTHENTICATED',
+    unauthorizedAccess = 'UNAUTHORIZED',
 
-    // Resource errors
-    NOT_FOUND = 'NOT_FOUND',
-    ALREADY_EXISTS = 'ALREADY_EXISTS',
+    // Resource Errors
+    notFound = 'NOT_FOUND',
+    alreadyExists = 'ALREADY_EXISTS',
 
-    // Input errors
-    BAD_USER_INPUT = 'BAD_USER_INPUT',
-    VALIDATION_ERROR = 'VALIDATION_ERROR',
+    // Input Errors
+    badUserInput = 'BAD_USER_INPUT',
+    validationError = 'VALIDATION_ERROR',
 
-    // Business logic errors
-    BUSINESS_RULE_VIOLATION = 'BUSINESS_RULE_VIOLATION',
+    // Business Logic Errors
+    businessRuleViolation = 'BUSINESS_RULE_VIOLATION',
 
-    // Server errors
-    INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
-    DATABASE_ERROR = 'DATABASE_ERROR',
+    // System Errors
+    internalServerError = 'INTERNAL_SERVER_ERROR',
+    databaseError = 'DATABASE_ERROR',
 }
 
 /**
- * Base class for all GraphQL errors in the application
- * Compatible with Apollo Server v4 error handling
+ * Error extension data structure
  */
-export class AppGraphQLError extends GraphQLError {
-    constructor(
-        message: string,
-        code: string = ErrorCode.INTERNAL_SERVER_ERROR,
-        additionalProperties: Record<string, any> = {},
-    ) {
+interface ErrorExtensions {
+    code: ErrorCode;
+    statusCode?: number;
+    validationErrors?: Record<string, string>[];
+    originalError?: Error;
+    [key: string]: unknown;
+}
+
+/**
+ * Base class for GraphQL errors with standardized formatting
+ */
+export class BaseGraphQLError extends GraphQLError {
+    constructor(message: string, code: ErrorCode, extensions?: Omit<ErrorExtensions, 'code'>) {
         super(message, {
             extensions: {
                 code,
-                ...additionalProperties,
+                ...extensions,
             },
         });
+    }
+}
 
-        Object.defineProperty(this, 'name', { value: 'AppGraphQLError' });
+/**
+ * Authentication error when user is not authenticated
+ */
+export class AuthenticationError extends BaseGraphQLError {
+    constructor(message = 'Not authenticated') {
+        super(message, ErrorCode.unauthenticated, { statusCode: 401 });
+    }
+}
+
+/**
+ * Authorization error when user doesn't have required permissions
+ */
+export class AuthorizationError extends BaseGraphQLError {
+    constructor(message = 'Not authorized') {
+        super(message, ErrorCode.unauthorizedAccess, { statusCode: 403 });
     }
 }
 
 /**
  * Error thrown when a requested resource is not found
  */
-export class NotFoundError extends AppGraphQLError {
-    constructor(resource: string, id?: string | number) {
-        const idMessage = id ? ` with ID '${id}'` : '';
-        super(
-            `${resource}${idMessage} not found`,
-            ErrorCode.NOT_FOUND,
-            { resource, id },
-        );
-
-        Object.defineProperty(this, 'name', { value: 'NotFoundError' });
+export class NotFoundError extends BaseGraphQLError {
+    constructor(message = 'Resource not found') {
+        super(message, ErrorCode.notFound, { statusCode: 404 });
     }
 }
 
 /**
- * Error thrown when authentication is required but not provided or is invalid
+ * Error thrown when attempting to create a resource that already exists
  */
-export class AuthenticationError extends AppGraphQLError {
-    constructor(message = 'Authentication required') {
-        super(message, ErrorCode.UNAUTHENTICATED);
-
-        Object.defineProperty(this, 'name', { value: 'AuthenticationError' });
+export class ResourceAlreadyExistsError extends BaseGraphQLError {
+    constructor(message = 'Resource already exists') {
+        super(message, ErrorCode.alreadyExists, { statusCode: 409 });
     }
 }
 
 /**
- * Error thrown when a user is authenticated but not authorized to perform an action
+ * Error for invalid user input
  */
-export class AuthorizationError extends AppGraphQLError {
-    constructor(message = 'You do not have permission to perform this action') {
-        super(message, ErrorCode.UNAUTHORIZED);
-
-        Object.defineProperty(this, 'name', { value: 'AuthorizationError' });
+export class UserInputError extends BaseGraphQLError {
+    constructor(message: string, validationErrors?: Record<string, string>[]) {
+        super(message, ErrorCode.badUserInput, {
+            statusCode: 400,
+            validationErrors,
+        });
     }
 }
 
 /**
- * Error thrown when input validation fails
+ * Error thrown when business rules are violated
  */
-export class ValidationError extends AppGraphQLError {
-    constructor(
-        message: string,
-        validationErrors: Record<string, any> = {},
-    ) {
-        super(
-            message,
-            ErrorCode.VALIDATION_ERROR,
-            { validationErrors },
-        );
-
-        Object.defineProperty(this, 'name', { value: 'ValidationError' });
+export class BusinessError extends BaseGraphQLError {
+    constructor(message: string) {
+        super(message, ErrorCode.businessRuleViolation, { statusCode: 422 });
     }
 }
 
 /**
- * Error thrown when an entity already exists (e.g., duplicate key)
+ * Error thrown when a database operation fails
  */
-export class ConflictError extends AppGraphQLError {
-    constructor(
-        resource: string,
-        field: string,
-        value: any,
-    ) {
-        super(
-            `${resource} with ${field} '${value}' already exists`,
-            ErrorCode.ALREADY_EXISTS,
-            { resource, field, value },
-        );
-
-        Object.defineProperty(this, 'name', { value: 'ConflictError' });
+export class DatabaseError extends BaseGraphQLError {
+    constructor(message = 'Database operation failed', originalError?: Error) {
+        super(message, ErrorCode.databaseError, {
+            statusCode: 500,
+            originalError,
+        });
     }
 }
 
 /**
- * Error thrown when a business rule is violated
+ * Format error for Apollo Server
  */
-export class BusinessRuleViolationError extends AppGraphQLError {
-    constructor(
-        message: string,
-        details?: Record<string, any>,
-    ) {
-        super(
-            message,
-            ErrorCode.BUSINESS_RULE_VIOLATION,
-            { details },
-        );
-
-        Object.defineProperty(this, 'name', { value: 'BusinessRuleViolationError' });
-    }
-}
-
-/**
- * Format error for Apollo Server v4 to prevent leaking sensitive information
- */
-export const formatError = (error: GraphQLError, isDevelopment = false): GraphQLError => {
-    const originalError = error.originalError;
-
-    // Don't mask Apollo's own errors
-    if (
-        error.extensions?.code === ApolloServerErrorCode.GRAPHQL_PARSE_FAILED ||
-        error.extensions?.code === ApolloServerErrorCode.GRAPHQL_VALIDATION_FAILED ||
-        error.extensions?.code === ApolloServerErrorCode.BAD_USER_INPUT
-    ) {
-        return error;
+export function formatError(formattedError: GraphQLError, error: unknown): GraphQLError {
+    // If we already have a GraphQL error with proper formatting, return as is
+    if (error instanceof BaseGraphQLError) {
+        return formattedError;
     }
 
-    // If it's already our custom error, return it as is
-    if (
-        originalError instanceof AppGraphQLError ||
-        Object.values(ErrorCode).includes(error.extensions?.code as ErrorCode)
-    ) {
-        return error;
+    // Handle standard GraphQL errors
+    if (error instanceof GraphQLError) {
+        return formattedError;
     }
 
-    // In development, return the original error for debugging
-    if (isDevelopment) {
-        return error;
-    }
-
-    // In production, mask internal errors
-    return new GraphQLError('Internal server error', {
-        extensions: {
-            code: ErrorCode.INTERNAL_SERVER_ERROR,
-        },
+    // Fallback for unexpected errors
+    const originalError = error instanceof Error ? error : new Error(String(error));
+    return new BaseGraphQLError('An unexpected error occurred', ErrorCode.internalServerError, {
+        statusCode: 500,
+        originalError,
     });
-};
+}

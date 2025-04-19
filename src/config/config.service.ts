@@ -1,6 +1,56 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+/**
+ * Interface for database configuration options
+ */
+interface DatabaseOptions {
+    serverSelectionTimeoutMS: number;
+    heartbeatFrequencyMS: number;
+    maxPoolSize: number;
+    retryWrites: boolean;
+    [key: string]: unknown;
+}
+
+/**
+ * Interface for database configuration
+ */
+interface DatabaseConfig {
+    uri: string;
+    name: string;
+    options: DatabaseOptions;
+}
+
+/**
+ * Interface for CORS configuration
+ */
+interface CorsConfig {
+    allowedOrigins: string[];
+}
+
+/**
+ * Interface for security configuration
+ */
+interface SecurityConfig {
+    csrfSecret: string;
+    jsonLimit: string;
+}
+
+/**
+ * Interface for throttling configuration
+ */
+interface ThrottlingConfig {
+    ttl: number;
+    limit: number;
+}
+
+/**
+ * Interface for logging configuration
+ */
+interface LoggingConfig {
+    level: string;
+}
+
 @Injectable()
 export class AppConfigService {
     private readonly logger = new Logger(AppConfigService.name);
@@ -28,7 +78,9 @@ export class AppConfigService {
             // Basic validation of MongoDB URI format
             const mongoUrlPattern = /^mongodb(\+srv)?:\/\//;
             if (!mongoUrlPattern.test(uri)) {
-                throw new Error(`Invalid MongoDB connection string: ${uri}. Must start with mongodb:// or mongodb+srv://`);
+                throw new Error(
+                    `Invalid MongoDB connection string: ${uri}. Must start with mongodb:// or mongodb+srv://`,
+                );
             }
 
             this.logger.log('Database configuration validated successfully');
@@ -58,34 +110,34 @@ export class AppConfigService {
         return this.configService.get<number>('port') ?? 3000;
     }
 
-    get database() {
+    get database(): DatabaseConfig {
         return {
             uri: this.configService.get<string>('database.uri'),
             name: this.configService.get<string>('database.name'),
-            options: this.configService.get<Record<string, any>>('database.options') || {
+            options: this.configService.get<DatabaseOptions>('database.options') || {
                 // Removed deprecated options: useNewUrlParser and useUnifiedTopology
                 serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of default 30s
                 heartbeatFrequencyMS: 10000, // Check server health every 10 seconds
                 maxPoolSize: 10, // Maximum number of sockets to keep in connection pool
                 retryWrites: true, // Retry write operations on network errors
-            }
+            },
         };
     }
 
-    get cors() {
+    get cors(): CorsConfig {
         return {
             allowedOrigins: this.configService.get<string[]>('cors.allowedOrigins') || [],
         };
     }
 
-    get security() {
+    get security(): SecurityConfig {
         return {
             csrfSecret: this.configService.get<string>('security.csrfSecret'),
             jsonLimit: this.configService.get<string>('security.jsonLimit'),
         };
     }
 
-    get throttling() {
+    get throttling(): ThrottlingConfig {
         return {
             ttl: this.configService.get<number>('throttle.ttl'),
             limit: this.configService.get<number>('throttle.limit'),
@@ -96,7 +148,7 @@ export class AppConfigService {
         return this.configService.get<boolean>('debug') || false;
     }
 
-    get logging() {
+    get logging(): LoggingConfig {
         return {
             level: this.configService.get<string>('logging.level') || 'info',
         };

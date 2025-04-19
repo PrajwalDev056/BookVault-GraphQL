@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { validationSchema } from './validation.schema';
+
+import { AppConfigService } from './config.service';
 import developmentConfig from './envs/development';
 import productionConfig from './envs/production';
 import testConfig from './envs/test';
-import { AppConfigService } from './config.service';
+import { validationSchema } from './validation.schema';
 
 /**
  * Configuration module that loads environment-specific configuration
@@ -19,8 +20,8 @@ import { AppConfigService } from './config.service';
                 process.env.NODE_ENV === 'production'
                     ? productionConfig
                     : process.env.NODE_ENV === 'test'
-                        ? testConfig
-                        : developmentConfig
+                      ? testConfig
+                      : developmentConfig,
             ],
             validationSchema,
             validationOptions: {
@@ -34,4 +35,4 @@ import { AppConfigService } from './config.service';
     providers: [AppConfigService],
     exports: [AppConfigService],
 })
-export class AppConfigModule { }
+export class AppConfigModule {}

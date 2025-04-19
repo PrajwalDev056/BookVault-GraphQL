@@ -2,14 +2,17 @@
 
 ## Project Architecture
 
-This is a NestJS GraphQL API for book rental management with MongoDB integration. The project follows a domain-driven structure with separate modules for authors, books, users, and rentals.
+This project is a NestJS GraphQL API designed for book rental management, integrating with MongoDB. It
+adopts a domain-driven structure, organizing the codebase into distinct modules for authors, books,
+users, and rentals to promote separation of concerns and maintainability.
 
 ## TypeScript Conventions
 
 - Use strict typing with explicit return types
 - Prefer interfaces over types for object shapes
 - Use proper TypeScript decorators for NestJS and GraphQL
-- Follow camelCase for methods/properties, PascalCase for classes/interfaces
+- Follow camelCase for methods and properties, PascalCase for classes and interfaces, and
+  UPPER_SNAKE_CASE for constants. Ensure no line exceeds 100 characters.
 
 ## NestJS & GraphQL Guidelines
 
@@ -39,7 +42,8 @@ This is a NestJS GraphQL API for book rental management with MongoDB integration
 
 ## Markdown Linting
 
-- Follow [markdownlint rules](https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md) for consistent and readable markdown files.
+- Follow [markdownlint rules](https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md)
+  to ensure consistent and readable markdown files. Keep each line under 100 characters.
 - Use proper heading levels, bullet points, and code block formatting.
 - Avoid trailing spaces and ensure line length does not exceed recommended limits.
 - Include a blank line before and after headings and lists.
