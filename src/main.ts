@@ -7,6 +7,14 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config/config.service';
 
+/**
+ * Initializes and configures the NestJS application with environment-specific security, CORS, and CSRF middleware, then starts the server.
+ *
+ * Sets up logging, JSON body parsing, Helmet security headers, CORS, and CSRF protection with custom middleware to exclude the `/graphql` endpoint. Provides a `/csrf-token` route for non-GraphQL clients to retrieve a CSRF token. The server listens on the configured port and logs the application URL on startup.
+ *
+ * @remark
+ * CSRF protection is enforced on all routes except `/graphql`. The `/csrf-token` endpoint is available for clients that require a CSRF token outside of GraphQL operations.
+ */
 async function bootstrap(): Promise<void> {
     // Create environment-aware logger
     const logger = new Logger('Bootstrap');

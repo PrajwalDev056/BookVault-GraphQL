@@ -119,7 +119,13 @@ export class DatabaseError extends BaseGraphQLError {
 }
 
 /**
- * Format error for Apollo Server
+ * Formats errors for Apollo Server, ensuring all errors conform to a consistent GraphQL error structure.
+ *
+ * Returns the provided formatted error if it is already a recognized GraphQL error; otherwise, wraps unexpected errors in a {@link BaseGraphQLError} with a generic message and status code 500.
+ *
+ * @param formattedError - The error as formatted by Apollo Server.
+ * @param error - The original error thrown during execution.
+ * @returns A GraphQL-compliant error object suitable for client responses.
  */
 export function formatError(formattedError: GraphQLError, error: unknown): GraphQLError {
     // If we already have a GraphQL error with proper formatting, return as is
